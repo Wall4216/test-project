@@ -1,0 +1,30 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./html:/var/www/html
+      - ./etc/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - '80:80'
+    depends_on:
+      - app
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: laravel_db
+      POSTGRES_USER: laravel_user
+      POSTGRES_PASSWORD: secret
+
