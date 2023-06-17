@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Genre.php
-
 namespace App\Models;
 
 class Genre

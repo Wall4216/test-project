@@ -7,45 +7,78 @@ use App\Models\Person;
 use App\Models\Genre;
 use App\Models\BodyPartMovement;
 use App\Models\NightClub;
+use Illuminate\Routing\Controller;
 
 class NightClubController extends Controller
 {
     public function index()
     {
-        $danceStyles = [
-            'hip-hop' => ['body swaying', 'knee bends', 'arm swings', 'head bobs'],
-            'r&b' => ['groovy body movements', 'smooth footwork', 'hand gestures'],
-            'electrodance' => ['body rocking', 'minimal head movement', 'arm circles', 'leg movements'],
-            'house' => ['synchronized footwork', 'fast arm movements', 'groove steps'],
-            'pop' => ['smooth body movements', 'hand gestures', 'graceful footwork', 'head tilts'],
+        $genres = ['R&b', 'Electrohouse', 'Поп-музыка', 'House', 'Electrodance'];
+        $danceStyles = ['hip-hop', 'r&b', 'electrodance', 'house', 'pop'];
+
+        $hipHopMovements = [
+            new BodyPartMovement('Body', ['sway forward-backward']),
+            new BodyPartMovement('Legs', ['half-squat']),
+            new BodyPartMovement('Arms', ['bend at elbows']),
+            new BodyPartMovement('Head', ['nod forward-backward']),
         ];
 
-        $people = [];
+        $electroDanceMovements = [
+            new BodyPartMovement('Body', ['rock forward-backward']),
+            new BodyPartMovement('Head', ['minimal movement']),
+            new BodyPartMovement('Arms', ['circular motions']),
+            new BodyPartMovement('Legs', ['move to the rhythm']),
+        ];
 
-        for ($i = 1; $i <= 3; $i++) {
-            $name = 'Person ' . $i;
-            $randomDanceStyles = array_rand($danceStyles, rand(1, count($danceStyles)));
-            $bodyPartMovements = [];
-
-            foreach ($randomDanceStyles as $danceStyle) {
-                $movements = $danceStyles[$danceStyle];
-                $bodyPart = ucwords(str_replace('-', ' ', $danceStyle));
-                $bodyPartMovements[] = new BodyPartMovement($bodyPart, $movements);
-            }
-
-            $person = new Person($name, $randomDanceStyles, $bodyPartMovements);
-            $people[] = $person;
-        }
+        $popMusicMovements = [
+            new BodyPartMovement('Body', ['smooth movements']),
+            new BodyPartMovement('Arms', ['hand gestures']),
+            new BodyPartMovement('Legs', ['graceful footwork']),
+            new BodyPartMovement('Head', ['tilt']),
+        ];
 
         $nightClub = new NightClub();
-        $nightClub->setMusicGenre(new Genre('R&b'));
 
-        foreach ($people as $person) {
+        // Генерация случайных участников
+        for ($i = 1; $i <= 5; $i++) {
+            $name = 'Person ' . $i;
+            $randomGenres = array_rand($genres, 2);
+            $randomDanceStyles = array_rand($danceStyles, 2);
+
+            $personGenres = [$genres[$randomGenres[0]], $genres[$randomGenres[1]]];
+            $personDanceStyles = [$danceStyles[$randomDanceStyles[0]], $danceStyles[$randomDanceStyles[1]]];
+
+            $personMovements = [];
+            if ($personDanceStyles[0] === 'hip-hop') {
+                $personMovements[] = $hipHopMovements;
+            } elseif ($personDanceStyles[0] === 'electrodance') {
+                $personMovements[] = $electroDanceMovements;
+            } elseif ($personDanceStyles[0] === 'pop') {
+                $personMovements[] = $popMusicMovements;
+            }
+
+            if ($personDanceStyles[1] === 'hip-hop') {
+                $personMovements[] = $hipHopMovements;
+            } elseif ($personDanceStyles[1] === 'electrodance') {
+                $personMovements[] = $electroDanceMovements;
+            } elseif ($personDanceStyles[1] === 'pop') {
+                $personMovements[] = $popMusicMovements;
+            }
+
+            $person = new Person($name, $personDanceStyles, $personMovements);
             $nightClub->addPerson($person);
         }
 
+        $nightClub->setMusicGenre(new Genre('electrodance')); // Изменение жанра на "R&b"
         $nightClub->startParty();
 
-        return response()->json(['message' => 'Nightclub party started!']);
+        // Подготовка JSON-ответа
+        $response = [
+            'message' => 'Nightclub party started!',
+            'music_genre' => $nightClub->getMusicGenre()->getName(),
+            'participants' => $nightClub->getPersonActions(),
+        ];
+
+        return response()->json($response);
     }
 }

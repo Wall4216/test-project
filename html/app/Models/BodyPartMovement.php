@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/BodyPartMovement.php
-
 namespace App\Models;
 
 class BodyPartMovement
