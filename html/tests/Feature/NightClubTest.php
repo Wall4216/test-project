@@ -17,7 +17,7 @@ class NightClubTest extends TestCase
 
     public function testNightClubPartyStarted()
     {
-        $response = $this->get('/nightclub');
+        $response = $this->get('/api/nightclub');
 
         $response->assertStatus(200)
             ->assertJson([

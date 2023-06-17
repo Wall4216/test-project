@@ -53,7 +53,6 @@ class Person
         return in_array($this->danceStyles[0], $danceStyles);
     }
 
-
     public function dance()
     {
         $danceMoves = [];
