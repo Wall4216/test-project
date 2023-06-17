@@ -22,13 +22,16 @@ class Person
     public function canDanceToGenre($genre)
     {
         $danceStyles = NightClub::getDanceStylesForGenre($genre);
-        return count(array_intersect($this->danceStyles, $danceStyles)) > 0;
+        return !empty($danceStyles);
     }
 
     public function dance()
     {
         $danceMoves = [];
-        foreach ($this->bodyPartMovements as $bodyPart => $movements) {
+        foreach ($this->bodyPartMovements as $bodyPartMovement) {
+            $bodyPart = $bodyPartMovement->getBodyPart();
+            $movements = $bodyPartMovement->getMovements();
+
             $danceMoves[] = $bodyPart . " движения: " . implode(", ", $movements);
         }
 
@@ -38,6 +41,6 @@ class Person
 
     public function drink()
     {
-        echo $this->name . " пьет водку за баром." . "\n";
+        echo $this->name . " пьет водку за баром." . PHP_EOL;
     }
 }

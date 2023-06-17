@@ -1,17 +1,12 @@
 <?php
-
 // app/Models/NightClub.php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-class NightClub extends Model
+
+class NightClub
 {
-    protected $table = 'night_club';
-    protected $fillable = ['music_genre', 'people_count'];
     private $musicGenre;
     private $people;
-
 
     const DANCE_STYLE_MAPPING = [
         'R&b' => ['hip-hop', 'r&b'],
@@ -40,7 +35,7 @@ class NightClub extends Model
     {
         foreach ($this->people as $person) {
             if ($person->canDanceToGenre($this->musicGenre)) {
-                echo $person->dance() . "\n";
+                $person->dance();
             } else {
                 $person->drink();
             }
@@ -51,13 +46,9 @@ class NightClub extends Model
     {
         return self::DANCE_STYLE_MAPPING[$genre->getName()] ?? [];
     }
-    public function setPeopleCount(Request $request, NightClub $nightClub)
+
+    public function getMusicGenre()
     {
-        $count = $request->input('count');
-        $nightClub->setPeopleCount($count);
-        $nightClub->startParty();
-        return response()->json(['message' => 'Nightclub party started with ' . $count . ' people!']);
+        return $this->musicGenre;
     }
-
-
 }

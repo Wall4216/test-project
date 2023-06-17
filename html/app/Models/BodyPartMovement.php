@@ -6,12 +6,6 @@ namespace App\Models;
 
 class BodyPartMovement
 {
-    const MOVEMENTS = [
-        'body swaying', 'knee bends', 'arm swings', 'head bobs', 'body rocking',
-        'minimal head movement', 'arm circles', 'leg movements', 'smooth body movements',
-        'hand gestures', 'graceful footwork', 'head tilts'
-    ];
-
     private $bodyPart;
     private $movements;
 
@@ -31,4 +25,3 @@ class BodyPartMovement
         return $this->movements;
     }
 }
-

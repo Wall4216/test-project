@@ -15,13 +15,13 @@ class NightClubTest extends TestCase
      */
 
 
-    public function testSetPeopleCount()
+    public function testNightClubPartyStarted()
     {
-        $response = $this->postJson('/nightclub/set-people-count', ['count' => 10]);
+        $response = $this->get('/nightclub');
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Nightclub party started with 10 people!'
+                'message' => 'Nightclub party started!'
             ]);
     }
 
